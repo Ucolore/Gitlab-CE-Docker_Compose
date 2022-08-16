@@ -1,0 +1,63 @@
+version: '3.9'
+
+networks:
+  gitlab-network:
+
+volumes:
+  redis-data:
+  postgresql-data:
+  gitlab-data:
+
+services:
+  redis:
+      restart: always
+      image: redis:latest
+      command:
+      - --loglevel warning
+      volumes:
+      - redis-data:/data:Z
+  
+  postgresql:
+    restart: always
+    image: postgresql:latest
+    volumes:
+    - postgresql-data:/var/lib/postgresql:Z
+    environment:
+    - DB_USER=root
+    - DB_PASS=root
+    - DB_NAME=gitlabhq_production
+    - DB_EXTENSION=pg_trgm,btree_gist
+
+  gitlab-web:
+    image: 'gitlab/gitlab-ce:latest'
+    restart: always
+    depends_on:
+      - redis
+      - postgresql
+    hostname: 'localhost'
+    container_name: gitlab-ce
+    environment:
+      GITLAB_OMNIBUS_CONFIG: |
+        external_url 'https://localhost'
+    ports:
+      - '8080:80'
+      - '8443:443'
+      - '2224:22'
+    volumes:
+      - '/srv/gitlab/config:/etc/gitlab'
+      - '/srv/gitlab/logs:/var/log/gitlab'
+      - '/srv/gitlab/data:/var/opt/gitlab'
+    networks:
+      - gitlab-network
+  
+  gitlab-runner:
+    image: gitlab/gitlab-runner:latest
+    container_name: gitlab-runner    
+    restart: always
+    depends_on:
+      - gitlab-web
+    volumes:
+      - '/var/run/docker.sock:/var/run/docker.sock'
+      - '/srv/gitlab/gitlab-runner:/etc/gitlab-runner'
+    networks:
+      - gitlab-network
