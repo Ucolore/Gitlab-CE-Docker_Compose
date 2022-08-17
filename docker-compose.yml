@@ -12,8 +12,6 @@ services:
   redis:
       restart: always
       image: redis:latest
-      command:
-      - --loglevel warning
       volumes:
       - redis-data:/data:Z
   
