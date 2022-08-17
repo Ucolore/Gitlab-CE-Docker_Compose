@@ -1,7 +1,7 @@
 version: '3.9'
 
 networks:
-  gitlab-network:
+  gitlab-net:
 
 volumes:
   redis-data:
@@ -48,7 +48,7 @@ services:
       - '/srv/gitlab/logs:/var/log/gitlab'
       - '/srv/gitlab/data:/var/opt/gitlab'
     networks:
-      - gitlab-network
+      - gitlab-net
   
   gitlab-runner:
     image: gitlab/gitlab-runner:latest
@@ -60,4 +60,4 @@ services:
       - '/var/run/docker.sock:/var/run/docker.sock'
       - '/srv/gitlab/gitlab-runner:/etc/gitlab-runner'
     networks:
-      - gitlab-network
+      - gitlab-net
