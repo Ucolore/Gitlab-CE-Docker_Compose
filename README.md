@@ -7,5 +7,5 @@ It's a compose file that contains a pre-configuration of Self-managment Gitlab C
 ## INSTALATION PROCESS
 In the directory with compose file execute:
 - sudo docker compose up -d
-### Configure as you wish
+
 ### ENJOY!!!
