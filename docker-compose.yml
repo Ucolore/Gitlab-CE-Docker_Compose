@@ -1,35 +1,8 @@
-version: '3.9'
-
-networks:
-  gitlab-net:
-    name: gitlab-net
-
-# volumes:
-#   redis-data:
-#   postgresql-data:
-#   gitlab-data:
-
+version: '3.7'
 services:
-  # redis:
-  #     restart: always
-  #     image: redis:latest
-  #     volumes:
-  #     - redis-data:/data
-  # postgresql:
-  #   restart: always
-  #   image: postgres:latest
-  #   volumes:
-  #   - postgresql-data:/var/lib/postgresql/data
-  #   environment:
-  #     - POSTGRES_USER=root
-  #     - POSTGRES_PASSWORD=root
-  #     - POSTGRES_DB=gitlab_ce
-  gitlab-web:
+  web:
     image: 'gitlab/gitlab-ce:latest'
     restart: always
-    # depends_on:
-    #   - redis
-    #   - postgresql
     hostname: 'localhost'
     container_name: gitlab-ce
     environment:
@@ -37,22 +10,25 @@ services:
         external_url 'http://localhost'
     ports:
       - '8080:80'
-      - '2224:22'
+      - '8443:443'
     volumes:
       - '/srv/gitlab/config:/etc/gitlab'
       - '/srv/gitlab/logs:/var/log/gitlab'
       - '/srv/gitlab/data:/var/opt/gitlab'
-    shm_size: '256m'
     networks:
-      - gitlab-net
+      - gitlab
   gitlab-runner:
     image: gitlab/gitlab-runner:latest
     container_name: gitlab-runner    
     restart: always
     depends_on:
-      - gitlab-web
+      - web
     volumes:
-      - '/var/run/docker.sock:/var/run/docker.sock'
+      - /var/run/docker.sock:/var/run/docker.sock
       - '/srv/gitlab/gitlab-runner:/etc/gitlab-runner'
     networks:
-      - gitlab-net
+      - gitlab
+
+networks:
+  gitlab:
+    name: gitlab-network
