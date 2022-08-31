@@ -2,7 +2,7 @@
 It's a compose file that contains a pre-configuration of Self-managment Gitlab Community Edition
 
 ## REQUIREMENTS
-- Docker Installed
+- Docker and docker compose Installed
 
 ## INSTALATION PROCESS
 In the directory with compose file execute:
@@ -11,7 +11,7 @@ Our GitLab is available at defined base url, example: http://localhost:8080.
 ## REGISTER GITLAB RUNNER (For CI/CD)
 1. To use the GitLab runner in GitLab, you need to configure it. For correct configuration, we will need a token copied from the    portal. To do this, go to the address: http://localhost:8080/admin/runners (Consider your context in base url) and click the Copy token button.
 2. In the next step, it goes to the console and run the following command: sudo docker run --rm -it -v /srv/gitlab/gitlab-runner/config:/etc/gitlab-runner gitlab/gitlab-runner register;
-3. Enter your GitLab instance URL (also known as the gitlab-ci coordinator URL), as Runner and Gitlab are on the same machine we can use the container name, example: http://gitlab-ce;
+3. Enter your GitLab instance URL (also known as the gitlab-ci coordinator URL), as Runner and Gitlab are on the same machine we can use the localhost, example: http://localhost:8080;
 4. Enter the token you obtained to register the runner;
 5. Enter a description for the runner;
 6. Enter the tags associated with the runner, separated by commas. (optional) ;
